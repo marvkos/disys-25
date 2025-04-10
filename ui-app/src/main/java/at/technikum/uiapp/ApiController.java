@@ -9,6 +9,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ApiController {
 
     @FXML
@@ -16,8 +18,11 @@ public class ApiController {
 
     private HttpClient client;
 
+    private ObjectMapper objectMapper;
+
     public ApiController() {
         this.client = HttpClient.newHttpClient();
+        this.objectMapper = new ObjectMapper();
     }
 
     @FXML
@@ -31,7 +36,9 @@ public class ApiController {
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            responseText.setText("%s".formatted(response.body()));
+            Lecture lecture = objectMapper.readValue(response.body(), Lecture.class);
+
+            responseText.setText("ECTS: %s".formatted(lecture.getEcts()));
         } catch (Exception e) {
             e.printStackTrace();
         }
