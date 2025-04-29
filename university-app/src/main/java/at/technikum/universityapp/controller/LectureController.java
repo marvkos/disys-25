@@ -1,6 +1,7 @@
 package at.technikum.universityapp.controller;
 
 import at.technikum.universityapp.entity.Lecture;
+import at.technikum.universityapp.repository.LectureRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,17 +15,20 @@ import java.util.Random;
 @RestController
 public class LectureController {
 
+    private final LectureRepository lectureRepository;
+
+    public LectureController(LectureRepository lectureRepository) {
+        this.lectureRepository = lectureRepository;
+    }
+
     @GetMapping("/hello")
     public String helloWorld() {
         return "Hello World";
     }
 
     @GetMapping("/lectures")
-    public List<Lecture> all(@RequestParam LocalDateTime start) {
-        return List.of(
-                new Lecture("DISYS", "mkosmider", 5),
-                new Lecture("SLT", "mkosmider", 2)
-        );
+    public List<Lecture> all() {
+        return this.lectureRepository.findAll();
     }
 
     @GetMapping("/lectures/{id}")
